@@ -5,25 +5,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "DB_OUTFITHUB_SHIRTS")
-public class Shirt {
+@Table(name = "DB_OUTFITHUB_USERS")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
-    private String imagePath;
-    @Column(name = "SHIRT_NAME")
-    private String name;
-    @Column(name = "SHIRT_SIZE")
-    private String size;
-    private String status;
-    private BigDecimal price;
+    private String username;
+    private String email;
+    @Column(name = "USER_PASSWORD")
+    private String password;
+    @Column(name = "USER_ROLE")
+    private String role;
 
 }

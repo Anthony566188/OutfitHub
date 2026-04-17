@@ -19,11 +19,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
+    @Column(nullable = false)
     private String username;
+    @Column(nullable = false)
     private String email;
-    @Column(name = "USER_PASSWORD")
+    @Column(name = "USER_PASSWORD", nullable = false)
     private String password;
-    @Column(name = "USER_ROLE")
+    @Column(name = "USER_ROLE", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 

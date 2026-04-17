@@ -18,12 +18,15 @@ public class Shirt {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
+    @Column(nullable = false, unique = true)
     private String imagePath;
-    @Column(name = "SHIRT_NAME")
+    @Column(name = "SHIRT_NAME", nullable = false, unique = true)
     private String name;
-    @Column(name = "SHIRT_SIZE")
+    @Column(name = "SHIRT_SIZE", nullable = false)
     private String size;
+    @Column(nullable = false)
     private String status;
+    @Column(nullable = false)
     private BigDecimal price;
 
 }

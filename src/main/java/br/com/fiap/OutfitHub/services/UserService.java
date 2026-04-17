@@ -1,0 +1,50 @@
+package br.com.fiap.OutfitHub.services;
+
+import br.com.fiap.OutfitHub.exceptions.ResourceNotFoundException;
+import br.com.fiap.OutfitHub.models.User;
+import br.com.fiap.OutfitHub.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
+
+@Service
+public class UserService {
+
+    private final UserRepository repository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository repository) {
+        this.repository = repository;
+    }
+
+    @Transactional(readOnly = true)
+    public User auth(String email, String password) {
+
+//        if (email == null || email.isBlank() || password == null || password.isBlank()) {
+//            throw new BusinessException("Login e senha são obrigatórios");
+//        }
+
+        Optional<User> userOpt = repository.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                    "Credenciais inválidas.");
+        }
+
+        User user = userOpt.get();
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                    "Credenciais inválidas.");
+        }
+
+        return repository.findById(user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+    }
+
+}

@@ -5,16 +5,18 @@ import br.com.fiap.OutfitHub.models.enums.Role;
 
 public record UserResponse(
         Long id,
-        String username,
+        String name,
         String email,
-        Role role
+        Role role,
+        String token
 ) {
-    public static UserResponse fromEntity(User user) {
+    public static UserResponse fromEntity(User user, String token) {
         return new UserResponse(
                 user.getId(),
-                user.getUsername(),
+                user.getName(),
                 user.getEmail(),
-                user.getRole()
+                user.getRole(),
+                token
         );
     }
 }

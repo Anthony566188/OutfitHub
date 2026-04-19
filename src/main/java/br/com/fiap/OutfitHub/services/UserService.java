@@ -27,10 +27,6 @@ public class UserService {
     @Transactional(readOnly = true)
     public User auth(String email, String password) {
 
-//        if (email == null || email.isBlank() || password == null || password.isBlank()) {
-//            throw new BusinessException("Login e senha são obrigatórios");
-//        }
-
         Optional<User> userOpt = repository.findByEmail(email);
         if (userOpt.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
@@ -38,13 +34,13 @@ public class UserService {
         }
 
         User user = userOpt.get();
+
+        // Verifica se a password enviada coincide com o hash do banco
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
-                    "Credenciais inválidas.");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciais inválidas.");
         }
 
-        return repository.findById(user.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+        return user;
     }
 
 }

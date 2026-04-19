@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 
 
 public record UserRequest(
-    String username,
+    String name,
     @Email
     @NotBlank(message = "O email é obrigatório")
     String email,
@@ -16,7 +16,7 @@ public record UserRequest(
 
     public User toEntity() {
         return User.builder()
-                .username(username)
+                .name(name)
                 .email(email)
                 .password(password)
                 .build();

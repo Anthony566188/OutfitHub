@@ -1,5 +1,6 @@
 package br.com.fiap.OutfitHub.models;
 
+import br.com.fiap.OutfitHub.models.enums.Size;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +24,8 @@ public class Shirt {
     @Column(name = "SHIRT_NAME", nullable = false, unique = true)
     private String name;
     @Column(name = "SHIRT_SIZE", nullable = false)
-    private String size;
+    @Enumerated(EnumType.STRING)
+    private Size size;
     @Column(nullable = false)
     private String status;
     @Column(nullable = false)

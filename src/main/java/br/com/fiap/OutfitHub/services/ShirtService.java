@@ -9,13 +9,4 @@ import java.util.List;
 @Service
 public class ShirtService {
 
-    private final ShirtRepository repository;
-
-    public ShirtService(ShirtRepository repository) {
-        this.repository = repository;
-    }
-
-    public List<Shirt> listShirts(){
-        return repository.findAll();
-    }
 }

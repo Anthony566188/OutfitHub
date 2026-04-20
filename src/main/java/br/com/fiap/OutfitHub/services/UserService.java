@@ -1,6 +1,5 @@
 package br.com.fiap.OutfitHub.services;
 
-import br.com.fiap.OutfitHub.exceptions.ResourceNotFoundException;
 import br.com.fiap.OutfitHub.models.User;
 import br.com.fiap.OutfitHub.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

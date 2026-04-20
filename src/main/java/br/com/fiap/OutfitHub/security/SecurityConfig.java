@@ -36,13 +36,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/health").permitAll()
                         .requestMatchers(HttpMethod.GET, "/shirts").permitAll()
                         .requestMatchers("/error").permitAll()
+                        .requestMatchers("/").permitAll()
                         // Endpoints restritos APENAS para ADMIN
-//                        .requestMatchers(HttpMethod.POST, "/shirts").hasRole("ADMIN")
-//                        .requestMatchers(HttpMethod.PUT, "/shirts/**").hasRole("ADMIN")
-//                        .requestMatchers(HttpMethod.DELETE, "/shirts/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/shirts").hasRole("ADMIN")
                         .anyRequest().authenticated() // Exige autenticação para todo o resto
                 )
-                // Adiciona o nosso filtro de JWT ANTES do filtro padrão do Spring
+                // Adiciona o filtro de JWT ANTES do filtro padrão do Spring
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

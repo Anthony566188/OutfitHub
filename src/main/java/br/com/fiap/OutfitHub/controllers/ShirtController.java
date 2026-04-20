@@ -14,18 +14,4 @@ import java.util.List;
 @RequestMapping("shirts")
 public class ShirtController {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
-    private final ShirtService service;
-
-    public ShirtController(ShirtService service) {
-        this.service = service;
-    }
-
-    @GetMapping
-    public List<Shirt> listAll() {
-        log.info("Listando todas as camisas");
-        return service.listShirts();
-    }
-
 }

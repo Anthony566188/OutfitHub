@@ -38,7 +38,10 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/").permitAll()
                         // Endpoints restritos APENAS para ADMIN
-                        .requestMatchers(HttpMethod.POST, "/shirts").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/shirts/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/shirts/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/shirts/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/shirts/**").hasRole("ADMIN")
                         .anyRequest().authenticated() // Exige autenticação para todo o resto
                 )
                 // Adiciona o filtro de JWT ANTES do filtro padrão do Spring

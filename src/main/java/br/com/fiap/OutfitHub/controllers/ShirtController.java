@@ -38,4 +38,10 @@ public class ShirtController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("{id}")
+    public Shirt update(@RequestPart("shirt") Shirt shirt,
+                        @PathVariable Long id,
+                        @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
+        return service.updateShirt(shirt, id, image);
+    }
 }

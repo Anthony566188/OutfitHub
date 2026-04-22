@@ -9,7 +9,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ShirtService {
@@ -36,15 +35,43 @@ public class ShirtService {
 
     public void deleteShirt(Long id) {
 
-        var optionalShirt = getShirtById(id);
-        if (optionalShirt.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Camisa não encontrada");
-        }
+        findShirtById(id);
 
         repository.deleteById(id);
     }
 
-    public Optional<Shirt> getShirtById(Long id) {
-        return repository.findById(id);
+    public Shirt updateShirt(Shirt shirt, Long id, MultipartFile image) throws IOException {
+
+//        if (studyPlan.getName() == null || studyPlan.getName().isBlank()) {
+//            throw new BusinessException("Nome do plano de estudo é obrigatório");
+//        }
+
+        // Busca a camisa existente no banco
+        Shirt existingShirt = findShirtById(id);
+
+        // Verifica se uma nova imagem foi enviada na requisição
+        if (image != null && !image.isEmpty()) {
+            // Faz o upload da nova imagem para o Cloudinary
+            String newImageUrl = cloudinaryService.upload(image);
+            // Atualiza o caminho com a nova URL gerada
+            existingShirt.setImagePath(newImageUrl);
+
+        }
+
+        existingShirt.setName(shirt.getName());
+        existingShirt.setSize(shirt.getSize());
+        existingShirt.setStatus(shirt.getStatus());
+        existingShirt.setPrice(shirt.getPrice());
+
+        // Salva a alteração
+        return repository.save(existingShirt);
+
     }
+
+    private Shirt findShirtById(Long id){
+        return repository.findById(id).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Camisa de id " + id + " não encontrada"));
+    }
+
 }

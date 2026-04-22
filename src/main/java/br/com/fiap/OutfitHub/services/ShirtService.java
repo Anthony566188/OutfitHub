@@ -1,6 +1,7 @@
 package br.com.fiap.OutfitHub.services;
 
 import br.com.fiap.OutfitHub.models.Shirt;
+import br.com.fiap.OutfitHub.models.enums.Status;
 import br.com.fiap.OutfitHub.repositories.ShirtRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ public class ShirtService {
         String imageUrl = cloudinaryService.upload(image);
 
         shirt.setImagePath(imageUrl);
+        shirt.setStatus(Status.ESTOQUE);
         return repository.save(shirt);
     }
 

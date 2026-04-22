@@ -1,8 +1,10 @@
 package br.com.fiap.OutfitHub.models;
 
 import br.com.fiap.OutfitHub.models.enums.Size;
+import br.com.fiap.OutfitHub.models.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +14,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "DB_OUTFITHUB_SHIRTS")
 public class Shirt {
 
@@ -27,7 +30,8 @@ public class Shirt {
     @Enumerated(EnumType.STRING)
     private Size size;
     @Column(nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     @Column(nullable = false)
     private BigDecimal price;
 

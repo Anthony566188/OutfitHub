@@ -1,7 +1,9 @@
 package br.com.fiap.OutfitHub.controllers;
 
+import br.com.fiap.OutfitHub.dto.ShirtRequest;
 import br.com.fiap.OutfitHub.models.Shirt;
 import br.com.fiap.OutfitHub.services.ShirtService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,9 +29,9 @@ public class ShirtController {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Shirt create(@RequestPart("shirt") Shirt shirt,
+    public Shirt create(@RequestPart("shirt") @Valid ShirtRequest shirtRequest,
                         @RequestPart("image") MultipartFile image) throws IOException {
-        return service.saveShirt(shirt, image);
+        return service.saveShirt(shirtRequest.toEntity(), image);
     }
 
     @DeleteMapping("{id}")

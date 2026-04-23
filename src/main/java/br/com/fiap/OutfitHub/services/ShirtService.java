@@ -10,6 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ShirtService {
@@ -37,22 +38,41 @@ public class ShirtService {
 
     public void deleteShirt(Long id) {
 
-        findShirtById(id);
+        var existing = findShirtById(id);
+
+        // Tenta apagar a imagem do Cloudinary primeiro
+        try {
+            String publicId = extractPublicId(existing.getImagePath());
+            if (publicId != null) {
+                Map result = cloudinaryService.delete(publicId);
+                System.out.println("Resposta do Cloudinary: " + result);
+            }
+        } catch (IOException e) {
+            // Em caso de erro de rede, lança uma exceção para o Spring tratar
+            throw new RuntimeException("Erro ao tentar apagar a imagem do Cloudinary", e);
+        }
 
         repository.deleteById(id);
     }
 
     public Shirt updateShirt(Shirt shirt, Long id, MultipartFile image) throws IOException {
 
-//        if (studyPlan.getName() == null || studyPlan.getName().isBlank()) {
-//            throw new BusinessException("Nome do plano de estudo é obrigatório");
-//        }
-
         // Busca a camisa existente no banco
         Shirt existingShirt = findShirtById(id);
 
         // Verifica se uma nova imagem foi enviada na requisição
         if (image != null && !image.isEmpty()) {
+
+            // Apaga a imagem antiga da nuvem antes de colocar a nova
+            try {
+                String oldPublicId = extractPublicId(existingShirt.getImagePath());
+                if (oldPublicId != null) {
+                    cloudinaryService.delete(oldPublicId);
+                }
+            } catch (IOException e) {
+                System.err.println("Aviso: Falha ao apagar a imagem antiga do Cloudinary.");
+            }
+
             // Faz o upload da nova imagem para o Cloudinary
             String newImageUrl = cloudinaryService.upload(image);
             // Atualiza o caminho com a nova URL gerada
@@ -74,6 +94,20 @@ public class ShirtService {
         return repository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Camisa de id " + id + " não encontrada"));
+    }
+
+    private String extractPublicId(String imageUrl) {
+        if (imageUrl == null || !imageUrl.contains("/")) {
+            return null;
+        }
+
+        // Divide a URL pelas barras ("/") e pega o último elemento
+        String[] parts = imageUrl.split("/");
+        String lastPart = parts[parts.length - 1]; // "imagem.png"
+
+        // Remove a extensão (o ponto e o que vem a seguir)
+        int dotIndex = lastPart.lastIndexOf('.');
+        return dotIndex != -1 ? lastPart.substring(0, dotIndex) : lastPart;
     }
 
 }

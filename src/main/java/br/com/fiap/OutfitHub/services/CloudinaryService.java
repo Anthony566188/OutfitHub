@@ -24,4 +24,9 @@ public class CloudinaryService {
         // Retorna a URL segura (https) gerada pelo Cloudinary
         return uploadResult.get("secure_url").toString();
     }
+
+    public Map delete(String publicId) throws IOException {
+        return cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+    }
+
 }
